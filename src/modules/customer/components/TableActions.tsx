@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Plus, Trash2, Pencil, Search, Funnel, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useCustomerStore } from "@/modules/customer/store/useCustomerStore";
-import { useDeleteCustomers } from "@/hooks/useCustomers";
-import { ConfirmationModal } from "./ConfirmationModal";
+import { Button, Input } from "@/components/ui";
+import { useCustomerStore } from "@/modules/customer/store";
+import { useDeleteCustomersMutation } from "@/modules/customer/hooks";
+import { ConfirmationModal } from "@/components/common";
 
 export function TableActions() {
   const { selectedIds, openModal, clearSelection } = useCustomerStore();
-  const deleteCustomers = useDeleteCustomers();
+  const deleteCustomers = useDeleteCustomersMutation();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const hasSelection = selectedIds.length > 0;

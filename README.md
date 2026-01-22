@@ -1,39 +1,59 @@
 # Customer Payment Dashboard
 
-A high-performance, responsive dashboard built for managing customer payment details.
+A premium, high-performance dashboard for professional customer management, featuring a modular architecture and state-of-the-art aesthetics.
 
 ## Tech Stack
 
 - **Framework**: [React](https://react.dev/) (Vite)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Components**: [ShadCn UI](https://ui.shadcn.com/)
-- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) (Global UI state)
-- **Data Fetching**: [TanStack Query](https://tanstack.com/query/latest) (Server state management)
+- **Data Fetching**: [TanStack Query](https://tanstack.com/query/latest) (v5)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/) (Client-side UI state)
 - **Validation**: [Zod](https://zod.dev/) + [React Hook Form](https://react-hook-form.com/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 
-## Architectural Choices
+## Architectural Architecture
 
-### 1. Feature-Based Module Structure
+The project implements a **Four-Layer Refined Architecture** for maximum maintainability:
 
-The project is organized into functional modules (e.g., `modules/customer`). This promotes scalability and keeps related components, stores, and types together.
+1.  **Service Layer**: Decoupled, asynchronous client for raw API interactions (e.g., `customer.service.ts`).
+2.  **Server State Layer**: Modular TanStack Query hooks for structured data fetching and mutation lifecycle management.
+3.  **UI Logic Layer**: Specialized business logic hooks (e.g., `useCustomerTable`, `useCustomerForm`) that decouple complex interactions from the view.
+4.  **View Layer**: "Thin" React components focused solely on rendering and user interaction.
 
-### 2. Centralized State Management
+## Design System & Aesthetics
 
-- **TanStack Query (v5)**: Used for all data-fetching and mutations. It handles caching, loading states, and automatic re-fetching (e.g., invalidating queries after a successful update).
-- **Zustand**: Used for lightweight global UI state, such as managing modal visibility and row selection. This separates UI logic from data logic.
+- **Modern UI**: Uses a "soft and smooth" design language with depth-based shadows (`shadow-2xl`) and beautiful 24px curved edges.
+- **Glassmorphism**: Subtle `backdrop-blur` and translucent backgrounds provide a premium, depth-aware interface.
+- **Micro-interactions**: Standardized button heights (`h-12`) and bold typography for a professional, tactile experience.
 
-### 3. Global Error Handling
+## Code Organization (Barrel Pattern)
 
-Implemented a centralized error handling system using TanStack Query's `QueryCache` and `MutationCache`. This ensures consistent user feedback (via Sonner toasts) for both fetching and data persistence errors across the entire application.
+The codebase strictly adheres to the **Barrel Export Pattern**. Every functional directory contains an `index.ts` file, enabling clean, consolidated imports:
 
-### 4. Robust Form Lifecycle
+```typescript
+// Example of consolidated barrel import
+import { Button, Input, Checkbox } from "@/components/ui";
+import { useCustomerTable, useCustomersQuery } from "@/modules/customer/hooks";
+```
 
-The `CustomerForm` includes explicit guards and event prevention to ensure a clean transition between "View" and "Edit" modes, preventing accidental submissions and ensuring a seamless CRUD experience.
+## Directory Structure
 
-### 5. Design Fidelity
+```text
+src/
+├── api/          # Global API/Mock clients
+├── components/   # Shared UI and Common components
+├── lib/          # Project-wide utilities and providers
+├── modules/      # Feature-based modules (e.g., customer/)
+│   └── customer/
+│       ├── components/ # Module-specific components
+│       ├── hooks/      # Module-specific logic (Queries & UI)
+│       ├── services/   # Module-specific API services
+│       └── store/      # Module-specific Zustand stores
+│       └── types/      # Module-specific types
+│       └── validations/      # Module-specific validations
 
-Strict adherence to typography (custom "overline" style) and layout specifications. The table headers use specific uppercase tracking and alignment to match premium dashboard standards.
+```
 
 ## Setup Instructions
 

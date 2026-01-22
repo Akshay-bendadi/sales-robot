@@ -6,42 +6,61 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/modules/customer/components/StatusBadge";
-import { useCustomers } from "@/hooks/useCustomers";
-import { useCustomerStore } from "@/modules/customer/store/useCustomerStore";
-import { ChevronLeft, ChevronRight, ChevronsUpDown, EllipsisVertical, Minus } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
+  Checkbox,
+  Button,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Info, Pencil, Trash2 } from "lucide-react";
-import { useDeleteCustomers } from "@/hooks/useCustomers";
-import { ConfirmationModal } from "@/components/common/ConfirmationModal";
-import { TableSkeleton } from "@/components/common";
+} from "@/components/ui";
+import {
+  Info,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsUpDown,
+  EllipsisVertical,
+  Minus,
+} from "lucide-react";
+import { ConfirmationModal, TableSkeleton } from "@/components/common";
+import {
+  useCustomersQuery,
+  useDeleteCustomersMutation,
+  useCustomerTable,
+} from "@/modules/customer/hooks";
+import { useCustomerStore } from "@/modules/customer/store";
+import { cn, formatCurrency } from "@/lib/utils";
+import { StatusBadge } from "./StatusBadge";
 
 const DEFAULT_ITEMS_PER_PAGE = 10;
 
 export function CustomerTable() {
-  const { data: customers, isLoading: isCustomersLoading } = useCustomers();
-  const { selectedIds, setSelectedIds, toggleSelection, openModal } = useCustomerStore();
-  const deleteCustomers = useDeleteCustomers();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sortAsc, setSortAsc] = useState(true);
+  const { data: customers, isLoading: isCustomersLoading } = useCustomersQuery();
+  const { toggleSelection, openModal } = useCustomerStore();
+  const deleteCustomers = useDeleteCustomersMutation();
   const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE);
   const [customerToDelete, setCustomerToDelete] = useState<string | null>(null);
+
+  const {
+    currentPage,
+    setCurrentPage,
+    sortAsc,
+    setSortAsc,
+    totalPages,
+    startIndex,
+    paginatedCustomers,
+    handleSelectAll,
+    isAllPageSelected,
+    isSomePageSelected,
+    sortedCustomers,
+    selectedIds,
+  } = useCustomerTable({ customers, itemsPerPage });
 
   if (isCustomersLoading) {
     return <TableSkeleton rowCount={itemsPerPage} />;
@@ -54,40 +73,6 @@ export function CustomerTable() {
       </div>
     );
   }
-
-  // Sorting
-  const sortedCustomers = [...customers].sort((a, b) => {
-    // Simple ID sort for the # column as implied by design
-    return sortAsc ? parseInt(a.id) - parseInt(b.id) : parseInt(b.id) - parseInt(a.id);
-  });
-
-  // Pagination
-  const totalPages = Math.ceil(sortedCustomers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedCustomers = sortedCustomers.slice(startIndex, startIndex + itemsPerPage);
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      const pageIds = paginatedCustomers.map((c) => c.id);
-      // Add page IDs to existing selection, avoiding duplicates
-      const newSelection = [...new Set([...selectedIds, ...pageIds])];
-      setSelectedIds(newSelection);
-    } else {
-      // Remove page IDs from selection
-      const pageIds = paginatedCustomers.map((c) => c.id);
-      const newSelection = selectedIds.filter((id) => !pageIds.includes(id));
-      setSelectedIds(newSelection);
-    }
-  };
-
-  const isAllPageSelected =
-    paginatedCustomers.length > 0 && paginatedCustomers.every((c) => selectedIds.includes(c.id));
-  const isSomePageSelected =
-    paginatedCustomers.some((c) => selectedIds.includes(c.id)) && !isAllPageSelected;
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(amount);
-  };
 
   const headerStyles =
     "font-semibold text-[11px] leading-4 uppercase text-text-header font-overline";

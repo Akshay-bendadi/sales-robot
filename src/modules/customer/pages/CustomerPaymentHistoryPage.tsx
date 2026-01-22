@@ -1,8 +1,6 @@
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
-import { CustomerTable } from "../components/CustomerTable";
-import { CustomerModal } from "../components/CustomerModal";
-import { TableActions } from "@/components/common/TableActions";
+import { CustomerTable, CustomerModal, TableActions } from "../components";
 
 export default function CustomerPaymentHistoryPage() {
   return (

@@ -1,15 +1,19 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui";
 import { CustomerForm } from "./CustomerForm";
-import { useCustomerStore } from "@/modules/customer/store/useCustomerStore";
-import { useAddCustomer, useUpdateCustomer, useCustomers } from "@/hooks/useCustomers";
-import { CustomerFormData } from "@/modules/customer/types/customer";
+import { useCustomerStore } from "@/modules/customer/store";
+import {
+  useAddCustomerMutation,
+  useUpdateCustomerMutation,
+  useCustomersQuery,
+} from "@/modules/customer/hooks";
+import { CustomerFormData } from "@/modules/customer/types";
 
 export function CustomerModal() {
   const { isModalOpen, closeModal, editingCustomerId, isViewMode, setIsViewMode } =
     useCustomerStore();
-  const { data: customers } = useCustomers();
-  const addCustomer = useAddCustomer();
-  const updateCustomer = useUpdateCustomer();
+  const { data: customers } = useCustomersQuery();
+  const addCustomer = useAddCustomerMutation();
+  const updateCustomer = useUpdateCustomerMutation();
 
   const editingCustomer = customers?.find((c) => c.id === editingCustomerId);
 

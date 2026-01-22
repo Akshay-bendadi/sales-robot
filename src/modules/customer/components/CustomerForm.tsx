@@ -1,8 +1,4 @@
-import { useEffect } from "react";
-import { useForm, Resolver } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -10,17 +6,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
+  Input,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { CustomerFormData } from "@/modules/customer/types/customer";
-import { customerSchema } from "@/modules/customer/validation/customerSchema";
+  Button,
+} from "@/components/ui";
+import { CustomerFormData } from "@/modules/customer/types";
+import { useCustomerForm } from "@/modules/customer/hooks";
 
 interface CustomerFormProps {
   defaultValues?: CustomerFormData;
@@ -39,45 +34,15 @@ export function CustomerForm({
   isReadOnly,
   onEditClick,
 }: CustomerFormProps) {
-  const form = useForm<CustomerFormData>({
-    resolver: zodResolver(customerSchema) as Resolver<CustomerFormData>,
-    defaultValues: defaultValues || {
-      name: "",
-      description: "",
-      status: "Open",
-      rate: 0,
-      balance: 0,
-      deposit: 0,
-    },
+  const { form, handleSubmit } = useCustomerForm({
+    defaultValues,
+    onSubmit,
+    isReadOnly,
   });
-
-  useEffect(() => {
-    if (defaultValues) {
-      form.reset(defaultValues);
-    } else {
-      form.reset({
-        name: "",
-        description: "",
-        status: "Open",
-        rate: 0,
-        balance: 0,
-        deposit: 0,
-      });
-    }
-  }, [defaultValues, form]);
-
-  const handleSubmit = async (values: CustomerFormData) => {
-    if (isReadOnly) {
-      // Safety guard: clicking Edit (button type="button") shouldn't hit this,
-      // but Enter key might. We return early to ensure NO API call happens.
-      return;
-    }
-    await onSubmit(values);
-  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <FormField<CustomerFormData>
           control={form.control}
           name="name"

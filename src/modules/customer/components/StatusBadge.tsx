@@ -1,6 +1,6 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui";
 import { cn } from "@/lib/utils";
-import { Customer } from "@/modules/customer/types/customer";
+import { Customer } from "@/modules/customer/types";
 
 interface StatusBadgeProps {
   status: Customer["status"];
