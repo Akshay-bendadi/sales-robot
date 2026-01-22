@@ -5,7 +5,8 @@ import { useAddCustomer, useUpdateCustomer, useCustomers } from "@/hooks/useCust
 import { CustomerFormData } from "@/modules/customer/types/customer";
 
 export function CustomerModal() {
-  const { isModalOpen, closeModal, editingCustomerId } = useCustomerStore();
+  const { isModalOpen, closeModal, editingCustomerId, isViewMode, setIsViewMode } =
+    useCustomerStore();
   const { data: customers } = useCustomers();
   const addCustomer = useAddCustomer();
   const updateCustomer = useUpdateCustomer();
@@ -31,13 +32,21 @@ export function CustomerModal() {
     <Dialog open={isModalOpen} onOpenChange={(open) => !open && closeModal()}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>{editingCustomerId ? "Edit Customer" : "Add New Customer"}</DialogTitle>
+          <DialogTitle>
+            {isViewMode
+              ? "Customer Details"
+              : editingCustomerId
+                ? "Edit Customer"
+                : "Add New Customer"}
+          </DialogTitle>
         </DialogHeader>
         <CustomerForm
           defaultValues={editingCustomer}
           onSubmit={handleSubmit}
           onCancel={closeModal}
           isLoading={isLoading}
+          isReadOnly={isViewMode}
+          onEditClick={() => setIsViewMode(false)}
         />
       </DialogContent>
     </Dialog>

@@ -5,7 +5,8 @@ const mockCustomers: Customer[] = [
   {
     id: "1",
     name: "Ann Culhane",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Open",
     rate: 70.0,
     balance: -270.0,
@@ -14,7 +15,8 @@ const mockCustomers: Customer[] = [
   {
     id: "2",
     name: "Ahmad Rosser",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Paid",
     rate: 70.0,
     balance: 270.0,
@@ -23,7 +25,8 @@ const mockCustomers: Customer[] = [
   {
     id: "3",
     name: "Zain Calzoni",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Open",
     rate: 70.0,
     balance: -20.0,
@@ -32,7 +35,8 @@ const mockCustomers: Customer[] = [
   {
     id: "4",
     name: "Leo Stanton",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Inactive",
     rate: 70.0,
     balance: 600.0,
@@ -41,7 +45,8 @@ const mockCustomers: Customer[] = [
   {
     id: "5",
     name: "Kaiya Vetrovs",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Open",
     rate: 70.0,
     balance: -350.0,
@@ -95,7 +100,8 @@ const mockCustomers: Customer[] = [
   {
     id: "11",
     name: "Ethan Cole",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Due",
     rate: 60.0,
     balance: -90.0,
@@ -104,7 +110,8 @@ const mockCustomers: Customer[] = [
   {
     id: "12",
     name: "Sophia Martinez",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Inactive",
     rate: 75.0,
     balance: 520.0,
@@ -113,7 +120,8 @@ const mockCustomers: Customer[] = [
   {
     id: "13",
     name: "Liam O’Connor",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Open",
     rate: 90.0,
     balance: 310.0,
@@ -122,7 +130,8 @@ const mockCustomers: Customer[] = [
   {
     id: "14",
     name: "Ava Thompson",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla...",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla",
     status: "Due",
     rate: 65.0,
     balance: -150.0,

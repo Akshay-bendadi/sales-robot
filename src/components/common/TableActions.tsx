@@ -1,39 +1,60 @@
-import { Plus, Trash2, Pencil, Search, Funnel } from "lucide-react";
+import { useState } from "react";
+import { Plus, Trash2, Pencil, Search, Funnel, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCustomerStore } from "@/modules/customer/store/useCustomerStore";
 import { useDeleteCustomers } from "@/hooks/useCustomers";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 export function TableActions() {
   const { selectedIds, openModal, clearSelection } = useCustomerStore();
   const deleteCustomers = useDeleteCustomers();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const hasSelection = selectedIds.length > 0;
   const isSingleSelection = selectedIds.length === 1;
 
   const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete the selected customers?")) {
+    try {
       await deleteCustomers.mutateAsync(selectedIds);
       clearSelection();
+      setIsDeleteDialogOpen(false);
+    } catch (error) {
+      console.error("Failed to delete customers:", error);
     }
   };
 
   return (
     <div className="flex items-center justify-between bg-gray-100/75 px-5 py-4 rounded-md w-full">
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         {hasSelection ? (
           <>
-            <span className="text-sm font-medium text-slate-600 pl-2">
+            <span className="text-xs leading-[18px] font-medium text-text-header">
               {selectedIds.length} selected
             </span>
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleDelete}
-              className="h-8 w-8 text-red-500 hover:text-red-600 hover:bg-red-50"
+              onClick={() => setIsDeleteDialogOpen(true)}
+              className="h-8 w-10 text-red-500 hover:text-red-600 hover:bg-red-50 bg-white shadow-checkbox"
+              disabled={deleteCustomers.isPending}
             >
-              <Trash2 className="h-4 w-4" />
+              {deleteCustomers.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 size={16} />
+              )}
             </Button>
+            <ConfirmationModal
+              isOpen={isDeleteDialogOpen}
+              onClose={() => setIsDeleteDialogOpen(false)}
+              onConfirm={handleDelete}
+              title="Delete Customers"
+              message={`Are you sure you want to delete ${selectedIds.length} selected customer${selectedIds.length > 1 ? "s" : ""}? This action cannot be undone.`}
+              okText="Delete"
+              variant="danger"
+              isLoading={deleteCustomers.isPending}
+            />
           </>
         ) : (
           <div className="flex items-center gap-4">
@@ -55,7 +76,7 @@ export function TableActions() {
       <div className="flex space-x-2">
         {isSingleSelection ? (
           <Button
-            onClick={() => openModal(selectedIds[0])}
+            onClick={() => openModal(selectedIds[0], false)}
             className="bg-brand font-medium text-sm leading-5 hover:bg-brand-hover text-white h-8 px-3 py-1.5 tracking-[0.28px]"
           >
             <Pencil size={16} />

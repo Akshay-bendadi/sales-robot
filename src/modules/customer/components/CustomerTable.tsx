@@ -35,17 +35,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Info, Pencil, Trash2 } from "lucide-react";
+import { useDeleteCustomers } from "@/hooks/useCustomers";
+import { ConfirmationModal } from "@/components/common/ConfirmationModal";
 
 const DEFAULT_ITEMS_PER_PAGE = 10;
 
 export function CustomerTable() {
-  const { data: customers, isLoading } = useCustomers();
-  const { selectedIds, setSelectedIds, toggleSelection } = useCustomerStore();
+  const { data: customers, isLoading: isCustomersLoading } = useCustomers();
+  const { selectedIds, setSelectedIds, toggleSelection, openModal } = useCustomerStore();
+  const deleteCustomers = useDeleteCustomers();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortAsc, setSortAsc] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE);
+  const [customerToDelete, setCustomerToDelete] = useState<string | null>(null);
 
-  if (isLoading) {
+  if (isCustomersLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -164,14 +168,6 @@ export function CustomerTable() {
                   key={customer.id}
                   data-state={isSelected ? "selected" : undefined}
                   className="hover:bg-slate-50 even:bg-gray-50 group"
-                  onClick={() => {
-                    // Prevent toggling when clicking specific interactive elements if needed
-                    // For now, allow row click to select based on typical table UX?
-                    // Spec says: "On single/multiple row selection..." -> implying checkbox usage mostly,
-                    // but often row click is handy. Let's keep it to checkbox for precision,
-                    // or implement row click as selection toggle.
-                    // Design pattern usually favors checkbox for multi-select.
-                  }}
                 >
                   <TableCell className="px-2.5 py-3">
                     <Checkbox
@@ -180,7 +176,7 @@ export function CustomerTable() {
                       className="w-4 h-4 rounded-[4px] shadow-checkbox border-none"
                     />
                   </TableCell>
-                  <TableCell className="px-2.5 font-medium text-slate-900 py-3">
+                  <TableCell className="px-2.5 font-medium text-text-body py-3">
                     {customerIndex}
                   </TableCell>
                   <TableCell className="px-2.5 py-3">
@@ -193,8 +189,8 @@ export function CustomerTable() {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell className="px-2.5 text-sm font-normal leading-5 text-slate-600 line-clamp-2 py-3">
-                    {customer.description}
+                  <TableCell className="px-2.5 text-sm font-normal leading-5 text-text-header py-3">
+                    <span className="line-clamp-2">{customer.description}</span>
                   </TableCell>
                   <TableCell className="px-2.5 py-3">
                     <StatusBadge status={customer.status} />
@@ -243,15 +239,24 @@ export function CustomerTable() {
                         className="py-2 px-1.5 shadow-md min-w-[120px]"
                         align="end"
                       >
-                        <DropdownMenuItem className="flex items-center justify-between px-2.5 py-1 text-brand cursor-pointer focus:bg-slate-50 focus:text-brand rounded-[4px]">
+                        <DropdownMenuItem
+                          className="flex items-center justify-between px-2.5 py-1 text-brand cursor-pointer focus:bg-slate-50 focus:text-brand rounded-[4px]"
+                          onClick={() => openModal(customer.id, true)}
+                        >
                           <span className="text-sm font-medium leading-5">View</span>
                           <Info size={16} />
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="flex items-center justify-between px-2.5 py-1 text-brand cursor-pointer focus:bg-slate-50 focus:text-brand rounded-[4px]">
+                        <DropdownMenuItem
+                          className="flex items-center justify-between px-2.5 py-1 text-brand cursor-pointer focus:bg-slate-50 focus:text-brand rounded-[4px]"
+                          onClick={() => openModal(customer.id, false)}
+                        >
                           <span className="text-sm font-medium leading-5">Edit</span>
                           <Pencil size={16} />
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="flex items-center justify-between px-2.5 py-1 text-status-due-text cursor-pointer focus:bg-slate-50 focus:text-red-500 rounded-[4px]">
+                        <DropdownMenuItem
+                          className="flex items-center justify-between px-2.5 py-1 text-status-due-text cursor-pointer focus:bg-slate-50 focus:text-red-500 rounded-[4px]"
+                          onClick={() => setCustomerToDelete(customer.id)}
+                        >
                           <span className="text-sm font-medium leading-5">Delete</span>
                           <Trash2 size={16} />
                         </DropdownMenuItem>
@@ -265,6 +270,24 @@ export function CustomerTable() {
         </Table>
         <div className="h-4" />
       </div>
+
+      {!!customerToDelete && (
+        <ConfirmationModal
+          isOpen={!!customerToDelete}
+          onClose={() => setCustomerToDelete(null)}
+          onConfirm={async () => {
+            if (customerToDelete) {
+              await deleteCustomers.mutateAsync([customerToDelete]);
+              setCustomerToDelete(null);
+            }
+          }}
+          title="Delete Customer"
+          message="Are you sure you want to delete this customer? This action cannot be undone."
+          okText="Delete"
+          variant="danger"
+          isLoading={deleteCustomers.isPending}
+        />
+      )}
 
       {/* Pagination */}
       <div className="sticky bottom-0 h-11 w-full max-w-[1018px] mx-auto rounded-bl-lg rounded-br-lg flex items-center justify-between gap-5 px-5 py-[13px] bg-gray-100/75 backdrop-blur-[8px] z-20 mt-[-22px] shadow-sm">
