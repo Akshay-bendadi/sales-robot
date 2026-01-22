@@ -67,10 +67,16 @@ export default {
           due: { text: "#D12953", bg: "#FAF0F3" },
         },
       },
+      fontFamily: {
+        sans: ["Inter", "sans-serif"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      boxShadow: {
+        checkbox: "0px 2px 5px 0px #5960781A, 0px 0px 0px 1px #464F6029, 0px 1px 1px 0px #0000001A",
       },
       keyframes: {
         "accordion-down": {

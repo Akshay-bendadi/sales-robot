@@ -16,7 +16,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <div className="min-h-screen bg-gray-75 flex justify-center">
-          <div className="w-full max-w-[1020px] mx-auto overflow-hidden">
+          <div className="w-full max-w-[1020px] mx-auto my-auto overflow-hidden">
             <Routes>
               <Route
                 path="/"

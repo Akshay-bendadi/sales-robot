@@ -13,21 +13,37 @@ import { StatusBadge } from "@/modules/customer/components/StatusBadge";
 import { useCustomers } from "@/hooks/useCustomers";
 import { useCustomerStore } from "@/modules/customer/store/useCustomerStore";
 import {
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   ChevronsUpDown,
+  EllipsisVertical,
   Loader2,
   Minus,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Info, Pencil, Trash2 } from "lucide-react";
 
-const ITEMS_PER_PAGE = 10;
+const DEFAULT_ITEMS_PER_PAGE = 10;
 
 export function CustomerTable() {
   const { data: customers, isLoading } = useCustomers();
   const { selectedIds, setSelectedIds, toggleSelection } = useCustomerStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [sortAsc, setSortAsc] = useState(true);
+  const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE);
 
   if (isLoading) {
     return (
@@ -52,9 +68,9 @@ export function CustomerTable() {
   });
 
   // Pagination
-  const totalPages = Math.ceil(sortedCustomers.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedCustomers = sortedCustomers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(sortedCustomers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedCustomers = sortedCustomers.slice(startIndex, startIndex + itemsPerPage);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -79,36 +95,63 @@ export function CustomerTable() {
     return new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(amount);
   };
 
+  const headerStyles = "font-semibold text-[11px] leading-4 uppercase text-text-header";
+
   return (
-    <div className="space-y-4">
-      <div className="overflow-hidden">
-        <Table>
-          <TableHeader className="bg-gray-100/75">
+    <div className="relative flex flex-col">
+      <div className="max-h-[654px] overflow-auto relative rounded-t-lg border-b-0 no-scrollbar">
+        <Table className="border-separate border-spacing-0">
+          <TableHeader className="bg-gray-100/75 sticky top-0 z-10 shadow-sm transition-colors">
             <TableRow>
-              <TableHead className="w-[50px] pl-4">
+              <TableHead className="px-2.5 h-[40px]">
                 <Checkbox
                   icon={Minus}
+                  className="w-4 h-4 rounded-[4px] shadow-checkbox border-none"
                   checked={isAllPageSelected || (isSomePageSelected ? "indeterminate" : false)}
                   onCheckedChange={handleSelectAll}
                 />
               </TableHead>
-              <TableHead className="w-[80px]">
+              <TableHead className="w-[36px] px-2.5 h-[40px]">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="-ml-3 h-8 data-[state=open]:bg-accent text-text-header"
+                  className={cn(
+                    "h-auto p-0 hover:bg-transparent flex items-center gap-0.5",
+                    headerStyles
+                  )}
                   onClick={() => setSortAsc(!sortAsc)}
                 >
                   #
-                  <ChevronsUpDown className="ml-2 h-4 w-4" />
+                  <ChevronsUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead className="w-[200px] text-text-header">NAME</TableHead>
-              <TableHead className="min-w-[300px] text-text-header">DESCRIPTION</TableHead>
-              <TableHead className="w-[120px] text-text-header">STATUS</TableHead>
-              <TableHead className="text-right text-text-header">RATE</TableHead>
-              <TableHead className="text-right text-text-header">BALANCE</TableHead>
-              <TableHead className="text-right pr-6 text-text-header">DEPOSIT</TableHead>
+              <TableHead className="w-[160px] px-2.5 h-[40px]">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "h-auto p-0 hover:bg-transparent flex items-center gap-0.5",
+                    headerStyles
+                  )}
+                >
+                  NAME
+                  <ChevronsUpDown className="h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead className={cn("min-w-[238px] px-2.5 h-[40px]", headerStyles)}>
+                DESCRIPTION
+              </TableHead>
+              <TableHead className={cn("w-[70px] px-2.5 h-[40px]", headerStyles)}>STATUS</TableHead>
+              <TableHead className={cn("w-[100px] px-2.5 h-[40px] text-right", headerStyles)}>
+                RATE
+              </TableHead>
+              <TableHead className={cn("w-[100px] px-2.5 h-[40px] text-right", headerStyles)}>
+                BALANCE
+              </TableHead>
+              <TableHead className={cn("w-[100px] px-2.5 h-[40px] text-right", headerStyles)}>
+                DEPOSIT
+              </TableHead>
+              <TableHead className={cn("px-[3px] h-[40px]", headerStyles)} />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -120,7 +163,7 @@ export function CustomerTable() {
                 <TableRow
                   key={customer.id}
                   data-state={isSelected ? "selected" : undefined}
-                  className="hover:bg-slate-50 even:bg-gray-50"
+                  className="hover:bg-slate-50 even:bg-gray-50 group"
                   onClick={() => {
                     // Prevent toggling when clicking specific interactive elements if needed
                     // For now, allow row click to select based on typical table UX?
@@ -130,85 +173,152 @@ export function CustomerTable() {
                     // Design pattern usually favors checkbox for multi-select.
                   }}
                 >
-                  <TableCell className="pl-4">
+                  <TableCell className="px-2.5 py-3">
                     <Checkbox
                       checked={isSelected}
                       onCheckedChange={() => toggleSelection(customer.id)}
+                      className="w-4 h-4 rounded-[4px] shadow-checkbox border-none"
                     />
                   </TableCell>
-                  <TableCell className="font-medium text-slate-900">{customerIndex}</TableCell>
-                  <TableCell>
+                  <TableCell className="px-2.5 font-medium text-slate-900 py-3">
+                    {customerIndex}
+                  </TableCell>
+                  <TableCell className="px-2.5 py-3">
                     <div className="flex flex-col">
-                      <span className="font-medium text-text-body">{customer.name}</span>
-                      <span className="text-xs text-text-secondary">{customer.id}</span>
+                      <span className="font-medium text-sm leading-5 text-text-body">
+                        {customer.name}
+                      </span>
+                      <span className="text-xs leading-[18px] font-normal text-text-secondary">
+                        {customer.id}
+                      </span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-slate-600 max-w-[300px] truncate">
+                  <TableCell className="px-2.5 text-sm font-normal leading-5 text-slate-600 line-clamp-2 py-3">
                     {customer.description}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-2.5 py-3">
                     <StatusBadge status={customer.status} />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="px-2.5 text-right py-3">
                     <div className="flex flex-col">
-                      <span className="text-text-header">{formatCurrency(customer.rate)}</span>
-                      <span className="text-xs text-text-secondary">CAD</span>
+                      <span className="text-text-header font-normal text-sm leading-5">
+                        {formatCurrency(customer.rate)}
+                      </span>
+                      <span className="text-xs text-text-secondary leading-[18px] font-normal tracking-[0.36px]">
+                        CAD
+                      </span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="px-2.5 text-right py-3">
                     <div className="flex flex-col">
-                      <span className="text-text-balance">{formatCurrency(customer.balance)}</span>
-                      <span className="text-xs text-text-currency-balance">CAD</span>
+                      <span className="text-text-balance font-normal text-sm leading-5">
+                        {formatCurrency(customer.balance)}
+                      </span>
+                      <span className="text-xs text-text-currency-balance leading-[18px] font-normal tracking-[0.36px]">
+                        CAD
+                      </span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right pr-6">
+                  <TableCell className="px-2.5 text-right py-3">
                     <div className="flex flex-col">
-                      <span className="text-text-header">{formatCurrency(customer.deposit)}</span>
-                      <span className="text-xs text-text-secondary">CAD</span>
+                      <span className="text-text-header font-normal text-sm leading-5">
+                        {formatCurrency(customer.deposit)}
+                      </span>
+                      <span className="text-xs text-text-secondary leading-[18px] font-normal tracking-[0.36px]">
+                        CAD
+                      </span>
                     </div>
+                  </TableCell>
+                  <TableCell className="px-2.5 py-3">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <EllipsisVertical size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="py-2 px-1.5 shadow-md min-w-[120px]"
+                        align="end"
+                      >
+                        <DropdownMenuItem className="flex items-center justify-between px-2.5 py-1 text-brand cursor-pointer focus:bg-slate-50 focus:text-brand rounded-[4px]">
+                          <span className="text-sm font-medium leading-5">View</span>
+                          <Info size={16} />
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="flex items-center justify-between px-2.5 py-1 text-brand cursor-pointer focus:bg-slate-50 focus:text-brand rounded-[4px]">
+                          <span className="text-sm font-medium leading-5">Edit</span>
+                          <Pencil size={16} />
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="flex items-center justify-between px-2.5 py-1 text-status-due-text cursor-pointer focus:bg-slate-50 focus:text-red-500 rounded-[4px]">
+                          <span className="text-sm font-medium leading-5">Delete</span>
+                          <Trash2 size={16} />
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
+        <div className="h-4" />
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-2 sticky bottom-0 z-10 bg-gray-100/75 backdrop-blur-[8px]">
-        <div className="text-sm text-slate-500">
-          Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, sortedCustomers.length)}{" "}
-          of {sortedCustomers.length}
+      <div className="sticky bottom-0 h-11 w-full max-w-[1018px] mx-auto rounded-bl-lg rounded-br-lg flex items-center justify-between gap-5 px-5 py-[13px] bg-gray-100/75 backdrop-blur-[8px] z-20 mt-[-22px] shadow-sm">
+        <div className="text-xs leading-[18px] font-medium text-text-secondary">
+          {startIndex + 1}-{Math.min(startIndex + itemsPerPage, sortedCustomers.length)} of{" "}
+          {sortedCustomers.length}
         </div>
-        <div className="flex items-center space-x-6 lg:space-x-8">
-          <div className="flex items-center space-x-2">
-            <p className="text-sm font-medium text-slate-500">Rows per page</p>
-            <div className="flex items-center space-x-1">
-              <span className="text-sm font-medium">10</span>
-              <ChevronDown className="h-4 w-4 text-slate-500" />
-            </div>
+        <div className="flex items-center gap-5">
+          <div className="flex items-center gap-1">
+            <p className="text-xs leading-[18px] font-medium text-text-secondary">Rows per page:</p>
+            <Select
+              value={itemsPerPage.toString()}
+              onValueChange={(value) => {
+                setItemsPerPage(parseInt(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="h-auto p-0 border-none bg-transparent shadow-none focus:ring-0 text-text-secondary font-medium text-xs leading-[18px] w-fit gap-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="min-w-[40px] p-1 bg-white border-slate-200">
+                {[5, 10, 15, 20, 30, 40, 50].map((value) => (
+                  <SelectItem
+                    key={value}
+                    value={value.toString()}
+                    className="flex justify-center text-sm font-medium leading-5 px-2.5 rounded-[4px] focus:bg-brand focus:text-white data-[state=checked]:bg-brand data-[state=checked]:text-white cursor-pointer"
+                  >
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1">
             <Button
               variant="outline"
-              className="h-8 w-8 p-0"
+              className="h-5 w-6 p-0"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
             >
               <span className="sr-only">Go to previous page</span>
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft size={16} />
             </Button>
-            <div className="text-sm font-medium">
-              {currentPage} / {Math.max(1, totalPages)}
+            <div className="text-xs leading-[18px] font-medium text-text-secondary">
+              {currentPage}/{Math.max(1, totalPages)}
             </div>
             <Button
               variant="outline"
-              className="h-8 w-8 p-0"
+              className="h-5 w-6 p-0"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
             >
               <span className="sr-only">Go to next page</span>
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight size={16} />
             </Button>
           </div>
         </div>

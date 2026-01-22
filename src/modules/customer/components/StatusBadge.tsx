@@ -23,7 +23,12 @@ export function StatusBadge({ status }: StatusBadgeProps) {
   };
 
   return (
-    <Badge className={cn("font-medium px-2.5 py-0.5 shadow-none", getStatusStyles(status))}>
+    <Badge
+      className={cn(
+        "font-medium text-xs leading-[18px] px-2.5 py-[1px] shadow-none rounded-[10px]",
+        getStatusStyles(status)
+      )}
+    >
       {status}
     </Badge>
   );
