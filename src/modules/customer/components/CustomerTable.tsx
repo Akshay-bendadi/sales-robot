@@ -99,7 +99,8 @@ export function CustomerTable() {
     return new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(amount);
   };
 
-  const headerStyles = "font-semibold text-[11px] leading-4 uppercase text-text-header";
+  const headerStyles =
+    "font-semibold text-[11px] leading-4 uppercase text-text-header font-overline";
 
   return (
     <div className="relative flex flex-col">
@@ -107,7 +108,7 @@ export function CustomerTable() {
         <Table className="border-separate border-spacing-0">
           <TableHeader className="bg-gray-100/75 sticky top-0 z-10 shadow-sm transition-colors">
             <TableRow>
-              <TableHead className="px-2.5 h-[40px]">
+              <TableHead className="py-3 !px-2.5">
                 <Checkbox
                   icon={Minus}
                   className="w-4 h-4 rounded-[4px] shadow-checkbox border-none"
@@ -115,7 +116,7 @@ export function CustomerTable() {
                   onCheckedChange={handleSelectAll}
                 />
               </TableHead>
-              <TableHead className="w-[36px] px-2.5 h-[40px]">
+              <TableHead className="w-[36px] px-2.5 py-3">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -129,7 +130,7 @@ export function CustomerTable() {
                   <ChevronsUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead className="w-[160px] px-2.5 h-[40px]">
+              <TableHead className="w-[160px] px-2.5 py-3">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -142,20 +143,20 @@ export function CustomerTable() {
                   <ChevronsUpDown className="h-4 w-4" />
                 </Button>
               </TableHead>
-              <TableHead className={cn("min-w-[238px] px-2.5 h-[40px]", headerStyles)}>
+              <TableHead className={cn("min-w-[238px] px-2.5 py-3", headerStyles)}>
                 DESCRIPTION
               </TableHead>
-              <TableHead className={cn("w-[70px] px-2.5 h-[40px]", headerStyles)}>STATUS</TableHead>
-              <TableHead className={cn("w-[100px] px-2.5 h-[40px] text-right", headerStyles)}>
+              <TableHead className={cn("w-[70px] px-2.5 py-3", headerStyles)}>STATUS</TableHead>
+              <TableHead className={cn("w-[100px] px-2.5 py-3 text-right", headerStyles)}>
                 RATE
               </TableHead>
-              <TableHead className={cn("w-[100px] px-2.5 h-[40px] text-right", headerStyles)}>
+              <TableHead className={cn("w-[100px] px-2.5 py-3 text-right", headerStyles)}>
                 BALANCE
               </TableHead>
-              <TableHead className={cn("w-[100px] px-2.5 h-[40px] text-right", headerStyles)}>
+              <TableHead className={cn("w-[100px] px-2.5 py-3 text-right", headerStyles)}>
                 DEPOSIT
               </TableHead>
-              <TableHead className={cn("px-[3px] h-[40px]", headerStyles)} />
+              <TableHead className={cn("px-[3px] py-3", headerStyles)} />
             </TableRow>
           </TableHeader>
           <TableBody>

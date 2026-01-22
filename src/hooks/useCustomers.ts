@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { mockApi } from "@/api/mockApi";
 import { CustomerFormData } from "@/modules/customer/types/customer";
 
@@ -18,6 +19,7 @@ export const useAddCustomer = () => {
     mutationFn: (data: CustomerFormData) => mockApi.addCustomer(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CUSTOMERS_QUERY_KEY });
+      toast.success("Customer added successfully");
     },
   });
 };
@@ -30,6 +32,7 @@ export const useUpdateCustomer = () => {
       mockApi.updateCustomer(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CUSTOMERS_QUERY_KEY });
+      toast.success("Customer updated successfully");
     },
   });
 };
@@ -41,6 +44,7 @@ export const useDeleteCustomers = () => {
     mutationFn: (ids: string[]) => mockApi.deleteCustomers(ids),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CUSTOMERS_QUERY_KEY });
+      toast.success("Customers deleted successfully");
     },
   });
 };

@@ -67,6 +67,11 @@ export function CustomerForm({
   }, [defaultValues, form]);
 
   const handleSubmit = async (values: CustomerFormData) => {
+    if (isReadOnly) {
+      // Safety guard: clicking Edit (button type="button") shouldn't hit this,
+      // but Enter key might. We return early to ensure NO API call happens.
+      return;
+    }
     await onSubmit(values);
   };
 
@@ -190,7 +195,11 @@ export function CustomerForm({
           {isReadOnly ? (
             <Button
               type="button"
-              onClick={onEditClick}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onEditClick?.();
+              }}
               className="bg-brand hover:bg-brand-hover text-white"
             >
               Edit
@@ -202,7 +211,7 @@ export function CustomerForm({
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Save Customer
+              {defaultValues ? "Save Changes" : "Add Customer"}
             </Button>
           )}
         </div>

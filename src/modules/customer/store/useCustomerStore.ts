@@ -45,5 +45,5 @@ export const useCustomerStore = create<CustomerStoreState>((set) => ({
       isViewMode: false,
     }),
 
-  setIsViewMode: (isViewMode) => set({ isViewMode }),
+  setIsViewMode: (isViewMode) => set({ isViewMode: isViewMode }),
 }));

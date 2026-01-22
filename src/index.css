@@ -57,6 +57,11 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .font-overline {
+    @apply text-[11px] leading-4 font-semibold uppercase tracking-[0.05em] text-text-header;
+    font-family: "overline", sans-serif;
+  }
 }
 
 .no-scrollbar {

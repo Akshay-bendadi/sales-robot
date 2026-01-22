@@ -14,16 +14,12 @@ export function CustomerModal() {
   const editingCustomer = customers?.find((c) => c.id === editingCustomerId);
 
   const handleSubmit = async (data: CustomerFormData) => {
-    try {
-      if (editingCustomerId) {
-        await updateCustomer.mutateAsync({ id: editingCustomerId, data });
-      } else {
-        await addCustomer.mutateAsync(data);
-      }
-      closeModal();
-    } catch (error) {
-      console.error("Failed to save customer:", error);
+    if (editingCustomerId) {
+      await updateCustomer.mutateAsync({ id: editingCustomerId, data });
+    } else {
+      await addCustomer.mutateAsync(data);
     }
+    closeModal();
   };
 
   const isLoading = addCustomer.isPending || updateCustomer.isPending;

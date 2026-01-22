@@ -1,15 +1,14 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { Loader2 } from "lucide-react";
+import { Toaster } from "sonner";
+import { queryClient } from "@/lib/queryClient";
 
-// Lazy load the customer module page
 const CustomerPaymentHistoryPage = lazy(
   () => import("@/modules/customer/pages/CustomerPaymentHistoryPage")
 );
-
-const queryClient = new QueryClient();
 
 function App() {
   return (
@@ -39,6 +38,7 @@ function App() {
         </div>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} />
+      <Toaster position="bottom-right" richColors />
     </QueryClientProvider>
   );
 }

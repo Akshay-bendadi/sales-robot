@@ -69,6 +69,7 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
+        overline: ["overline", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
