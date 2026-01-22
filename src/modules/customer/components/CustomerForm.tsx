@@ -114,7 +114,7 @@ export function CustomerForm({
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField<CustomerFormData>
             control={form.control}
             name="status"
@@ -158,7 +158,7 @@ export function CustomerForm({
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField<CustomerFormData>
             control={form.control}
             name="balance"
@@ -188,8 +188,14 @@ export function CustomerForm({
           />
         </div>
 
-        <div className="flex justify-end space-x-2 pt-4">
-          <Button variant="outline" type="button" onClick={onCancel} disabled={isLoading}>
+        <div className="flex justify-end space-x-3 pt-6">
+          <Button
+            variant="outline"
+            type="button"
+            onClick={onCancel}
+            disabled={isLoading}
+            className="rounded-[14px] h-12 px-6 font-semibold"
+          >
             Cancel
           </Button>
           {isReadOnly ? (
@@ -200,7 +206,7 @@ export function CustomerForm({
                 e.stopPropagation();
                 onEditClick?.();
               }}
-              className="bg-brand hover:bg-brand-hover text-white"
+              className="bg-brand hover:bg-brand-hover text-white rounded-[14px] h-12 px-6 font-semibold shadow-sm"
             >
               Edit
             </Button>
@@ -208,7 +214,7 @@ export function CustomerForm({
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-[14px] h-12 px-6 font-semibold shadow-sm"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {defaultValues ? "Save Changes" : "Add Customer"}

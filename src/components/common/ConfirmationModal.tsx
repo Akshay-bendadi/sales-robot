@@ -57,17 +57,28 @@ export function ConfirmationModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && !isLoading && onClose()}>
-      <DialogContent className="sm:max-w-[400px]">
-        <DialogHeader className="flex flex-row items-center gap-3 space-y-0">
-          {styles.icon}
-          <DialogTitle className="text-xl">{title}</DialogTitle>
+      <DialogContent className="sm:max-w-[440px] p-10">
+        <DialogHeader className="flex flex-col items-center gap-4 space-y-0 text-center">
+          <div className="p-3 rounded-full bg-slate-50 mb-2">{styles.icon}</div>
+          <DialogTitle className="text-2xl font-bold tracking-tight text-slate-900 border-none">
+            {title}
+          </DialogTitle>
         </DialogHeader>
-        <div className="py-4 text-slate-600 text-sm leading-relaxed">{message}</div>
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={onClose} disabled={isLoading}>
+        <div className="py-2 text-slate-500 text-base leading-relaxed text-center">{message}</div>
+        <DialogFooter className="gap-3 sm:gap-3 flex-col sm:flex-row mt-6">
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={isLoading}
+            className="flex-1 rounded-[14px] h-12 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50"
+          >
             Cancel
           </Button>
-          <Button className={cn(styles.button)} onClick={onConfirm} disabled={isLoading}>
+          <Button
+            className={cn(styles.button, "flex-1 rounded-[14px] h-12 font-semibold shadow-sm")}
+            onClick={onConfirm}
+            disabled={isLoading}
+          >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {okText}
           </Button>

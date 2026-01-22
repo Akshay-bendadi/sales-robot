@@ -25,11 +25,11 @@ export function TableActions() {
   };
 
   return (
-    <div className="flex items-center justify-between bg-gray-100/75 px-5 py-4 rounded-md w-full">
-      <div className="flex items-center gap-2">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gray-100/75 px-5 py-4 rounded-md w-full gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
         {hasSelection ? (
-          <>
-            <span className="text-xs leading-[18px] font-medium text-text-header">
+          <div className="flex items-center gap-2">
+            <span className="text-xs leading-[18px] font-medium text-text-header whitespace-nowrap">
               {selectedIds.length} selected
             </span>
             <Button
@@ -55,29 +55,30 @@ export function TableActions() {
               variant="danger"
               isLoading={deleteCustomers.isPending}
             />
-          </>
+          </div>
         ) : (
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" className="h-8 w-10 bg-white">
-              <Funnel className="text-text-header" fill="text-header" size={16} />
-            </Button>
-            <div className="relative h-8">
-              <Search size={16} className="absolute left-2.5 top-2 text-placeholder" />
-              <Input
-                placeholder="Search..."
-                className="w-[320px] h-8 bg-white pl-9 placeholder:text-placeholder text-sm"
-              />
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full">
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size="icon" className="h-8 w-10 bg-white shrink-0">
+                <Funnel className="text-text-header" fill="text-header" size={16} />
+              </Button>
+              <div className="relative h-8 w-full sm:w-auto">
+                <Search size={16} className="absolute left-2.5 top-2 text-placeholder" />
+                <Input
+                  placeholder="Search..."
+                  className="w-full sm:w-[320px] h-8 bg-white pl-9 placeholder:text-placeholder text-sm"
+                />
+              </div>
             </div>
-            {/* Additional filters could go here */}
           </div>
         )}
       </div>
 
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 w-full sm:w-auto justify-end">
         {isSingleSelection ? (
           <Button
             onClick={() => openModal(selectedIds[0], false)}
-            className="bg-brand font-medium text-sm leading-5 hover:bg-brand-hover text-white h-8 px-3 py-1.5 tracking-[0.28px]"
+            className="bg-brand font-medium text-sm leading-5 hover:bg-brand-hover text-white h-8 px-3 py-1.5 tracking-[0.28px] w-full sm:w-auto"
           >
             <Pencil size={16} />
             Update Customer
@@ -85,7 +86,7 @@ export function TableActions() {
         ) : (
           <Button
             onClick={() => openModal()}
-            className="bg-brand font-medium text-sm leading-5 hover:bg-brand-hover text-white h-8 px-3 py-1.5 tracking-[0.28px]"
+            className="bg-brand font-medium text-sm leading-5 hover:bg-brand-hover text-white h-8 px-3 py-1.5 tracking-[0.28px] w-full sm:w-auto"
           >
             <Plus size={16} />
             Add customer

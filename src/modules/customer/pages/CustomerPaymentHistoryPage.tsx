@@ -9,7 +9,7 @@ export default function CustomerPaymentHistoryPage() {
     <div className="flex flex-col h-full">
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
-        <div className="space-y-4">
+        <div className="space-y-4 px-4 lg:px-0">
           <div className="bg-white rounded-lg shadow-sm border border-slate-200">
             <TableActions />
             <Suspense

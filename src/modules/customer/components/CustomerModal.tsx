@@ -26,7 +26,7 @@ export function CustomerModal() {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={(open) => !open && closeModal()}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] p-10">
         <DialogHeader>
           <DialogTitle>
             {isViewMode

@@ -12,14 +12,7 @@ import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/modules/customer/components/StatusBadge";
 import { useCustomers } from "@/hooks/useCustomers";
 import { useCustomerStore } from "@/modules/customer/store/useCustomerStore";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsUpDown,
-  EllipsisVertical,
-  Loader2,
-  Minus,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsUpDown, EllipsisVertical, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -37,6 +30,7 @@ import {
 import { Info, Pencil, Trash2 } from "lucide-react";
 import { useDeleteCustomers } from "@/hooks/useCustomers";
 import { ConfirmationModal } from "@/components/common/ConfirmationModal";
+import { TableSkeleton } from "@/components/common";
 
 const DEFAULT_ITEMS_PER_PAGE = 10;
 
@@ -50,17 +44,13 @@ export function CustomerTable() {
   const [customerToDelete, setCustomerToDelete] = useState<string | null>(null);
 
   if (isCustomersLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-      </div>
-    );
+    return <TableSkeleton rowCount={itemsPerPage} />;
   }
 
   if (!customers || customers.length === 0) {
     return (
       <div className="text-center py-12 text-slate-500 bg-white rounded-lg border border-slate-200">
-        No customers found. Add a customer to get started.
+        No Data Found
       </div>
     );
   }
@@ -182,7 +172,7 @@ export function CustomerTable() {
                   </TableCell>
                   <TableCell className="px-2.5 py-3">
                     <div className="flex flex-col">
-                      <span className="font-medium text-sm leading-5 text-text-body">
+                      <span className="font-medium text-sm leading-5 text-text-body truncate">
                         {customer.name}
                       </span>
                       <span className="text-xs leading-[18px] font-normal text-text-secondary">
@@ -333,7 +323,8 @@ export function CustomerTable() {
               <ChevronLeft size={16} />
             </Button>
             <div className="text-xs leading-[18px] font-medium text-text-secondary">
-              {currentPage}/{Math.max(1, totalPages)}
+              <span className="text-text-header">{currentPage}</span>
+              <span className="text-text-secondary">/{Math.max(1, totalPages)}</span>
             </div>
             <Button
               variant="outline"
