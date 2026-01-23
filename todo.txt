@@ -1,3 +1,0 @@
-icons need to add in the table header same as the figma - done
-deployment on vercel
-testing
