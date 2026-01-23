@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
+import { LuLoaderCircle } from "react-icons/lu";
 import { CustomerTable, CustomerModal, TableActions } from "../components";
 
 export default function CustomerPaymentHistoryPage() {
@@ -13,7 +13,7 @@ export default function CustomerPaymentHistoryPage() {
             <Suspense
               fallback={
                 <div className="flex justify-center items-center h-64">
-                  <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                  <LuLoaderCircle className="h-8 w-8 animate-spin text-blue-600" />
                 </div>
               }
             >

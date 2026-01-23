@@ -1,9 +1,14 @@
 import { useState } from "react";
-import { Plus, Trash2, Pencil, Search, Funnel, Loader2 } from "lucide-react";
+import { RiFilter2Fill } from "react-icons/ri";
 import { Button, Input } from "@/components/ui";
 import { useCustomerStore } from "@/modules/customer/store";
+import { CiSearch } from "react-icons/ci";
 import { useDeleteCustomersMutation } from "@/modules/customer/hooks";
 import { ConfirmationModal } from "@/components/common";
+import { HiMiniTrash } from "react-icons/hi2";
+import { IoPencilSharp } from "react-icons/io5";
+import { LuLoaderPinwheel } from "react-icons/lu";
+import { FaPlus } from "react-icons/fa6";
 
 export function TableActions() {
   const { selectedIds, openModal, clearSelection } = useCustomerStore();
@@ -39,9 +44,9 @@ export function TableActions() {
               disabled={deleteCustomers.isPending}
             >
               {deleteCustomers.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <LuLoaderPinwheel className="h-4 w-4 animate-spin" />
               ) : (
-                <Trash2 size={16} />
+                <HiMiniTrash size={16} />
               )}
             </Button>
             <ConfirmationModal
@@ -59,10 +64,10 @@ export function TableActions() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full">
             <div className="flex items-center gap-4">
               <Button variant="outline" size="icon" className="h-8 w-10 bg-white shrink-0">
-                <Funnel className="text-text-header" fill="text-header" size={16} />
+                <RiFilter2Fill className="text-text-header" size={16} />
               </Button>
               <div className="relative h-8 w-full sm:w-auto">
-                <Search size={16} className="absolute left-2.5 top-2 text-placeholder" />
+                <CiSearch size={16} className="absolute left-2.5 top-2 text-placeholder" />
                 <Input
                   placeholder="Search..."
                   className="w-full sm:w-[320px] h-8 bg-white pl-9 placeholder:text-placeholder text-sm"
@@ -79,7 +84,7 @@ export function TableActions() {
             onClick={() => openModal(selectedIds[0], false)}
             className="bg-brand font-medium text-sm leading-5 hover:bg-brand-hover text-white h-8 px-3 py-1.5 tracking-[0.28px] w-full sm:w-auto"
           >
-            <Pencil size={16} />
+            <IoPencilSharp size={16} />
             Update Customer
           </Button>
         ) : (
@@ -87,7 +92,7 @@ export function TableActions() {
             onClick={() => openModal()}
             className="bg-brand font-medium text-sm leading-5 hover:bg-brand-hover text-white h-8 px-3 py-1.5 tracking-[0.28px] w-full sm:w-auto"
           >
-            <Plus size={16} />
+            <FaPlus size={16} />
             Add customer
           </Button>
         )}

@@ -59,6 +59,7 @@ export default {
         "text-secondary": "#687182",
         "text-balance": "#E01A1A",
         "text-currency-balance": "#606F89",
+        "text-icon": "#BCC2CE",
         placeholder: "#A1A9B8",
         status: {
           open: { text: "#4F5AED", bg: "#F0F1FA" },

@@ -18,17 +18,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui";
-import {
-  Info,
-  Pencil,
-  Trash2,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsUpDown,
-  EllipsisVertical,
-  Minus,
-} from "lucide-react";
+import { HiMiniTrash } from "react-icons/hi2";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { RxCheck } from "react-icons/rx";
+import { FaMinus } from "react-icons/fa6";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { TbCaretUpDownFilled } from "react-icons/tb";
 import { ConfirmationModal, TableSkeleton } from "@/components/common";
+import { IoInformationCircle, IoPencilSharp } from "react-icons/io5";
 import {
   useCustomersQuery,
   useDeleteCustomersMutation,
@@ -66,32 +63,24 @@ export function CustomerTable() {
     return <TableSkeleton rowCount={itemsPerPage} />;
   }
 
-  if (!customers || customers.length === 0) {
-    return (
-      <div className="text-center py-12 text-slate-500 bg-white rounded-lg border border-slate-200">
-        No Data Found
-      </div>
-    );
-  }
-
   const headerStyles =
     "font-semibold text-[11px] leading-4 uppercase text-text-header font-overline";
 
   return (
     <div className="relative flex flex-col">
-      <div className="max-h-[654px] overflow-auto relative rounded-t-lg border-b-0 no-scrollbar">
+      <div className="max-h-[654px] overflow-auto relative border-b-0 no-scrollbar">
         <Table className="border-separate border-spacing-0">
           <TableHeader className="bg-gray-100/75 sticky top-0 z-10 shadow-sm transition-colors">
             <TableRow>
               <TableHead className="py-3 !px-2.5">
                 <Checkbox
-                  icon={Minus}
+                  icon={FaMinus}
                   className="w-4 h-4 rounded-[4px] shadow-checkbox border-none"
                   checked={isAllPageSelected || (isSomePageSelected ? "indeterminate" : false)}
                   onCheckedChange={handleSelectAll}
                 />
               </TableHead>
-              <TableHead className="w-[36px] px-2.5 py-3">
+              <TableHead className="w-[56px] px-2.5 py-3">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -102,10 +91,10 @@ export function CustomerTable() {
                   onClick={() => setSortAsc(!sortAsc)}
                 >
                   #
-                  <ChevronsUpDown className="h-4 w-4" />
+                  <TbCaretUpDownFilled className="h-4 w-4 text-text-icon" />
                 </Button>
               </TableHead>
-              <TableHead className="w-[160px] px-2.5 py-3">
+              <TableHead className="w-[180px] px-2.5 py-3">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -115,23 +104,35 @@ export function CustomerTable() {
                   )}
                 >
                   NAME
-                  <ChevronsUpDown className="h-4 w-4" />
+                  <TbCaretUpDownFilled className="h-4 w-4 text-text-icon" />
                 </Button>
               </TableHead>
-              <TableHead className={cn("min-w-[238px] px-2.5 py-3", headerStyles)}>
+              <TableHead className={cn("min-w-[258px] px-2.5 py-3", headerStyles)}>
                 DESCRIPTION
               </TableHead>
-              <TableHead className={cn("w-[70px] px-2.5 py-3", headerStyles)}>STATUS</TableHead>
-              <TableHead className={cn("w-[100px] px-2.5 py-3 text-right", headerStyles)}>
+              <TableHead className={cn("w-[90px] px-2.5 py-3", headerStyles)}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "h-auto p-0 hover:bg-transparent flex items-center gap-0.5",
+                    headerStyles
+                  )}
+                >
+                  STATUS
+                  <TbCaretUpDownFilled className="h-4 w-4 text-text-icon" />
+                </Button>
+              </TableHead>
+              <TableHead className={cn("w-[120px] px-2.5 py-3 text-right", headerStyles)}>
                 RATE
               </TableHead>
-              <TableHead className={cn("w-[100px] px-2.5 py-3 text-right", headerStyles)}>
+              <TableHead className={cn("w-[120px] px-2.5 py-3 text-right", headerStyles)}>
                 BALANCE
               </TableHead>
-              <TableHead className={cn("w-[100px] px-2.5 py-3 text-right", headerStyles)}>
+              <TableHead className={cn("w-[120px] px-2.5 py-3 text-right", headerStyles)}>
                 DEPOSIT
               </TableHead>
-              <TableHead className={cn("px-[3px] py-3", headerStyles)} />
+              <TableHead className={cn("w-[40px] py-3", headerStyles)} />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -143,11 +144,21 @@ export function CustomerTable() {
                 <TableRow
                   key={customer.id}
                   data-state={isSelected ? "selected" : undefined}
-                  className="hover:bg-slate-50 even:bg-gray-50 group"
+                  className={cn(
+                    "hover:bg-slate-50 even:bg-gray-50 group",
+                    isSelected && "bg-[#EBF0FA] hover:bg-[#EBF0FA] even:bg-[#EBF0FA]"
+                  )}
                 >
-                  <TableCell className="px-2.5 py-3">
+                  <TableCell
+                    className={cn(
+                      "px-2.5 py-3 relative",
+                      isSelected &&
+                        "before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[2px] before:bg-[#2264E5]"
+                    )}
+                  >
                     <Checkbox
                       checked={isSelected}
+                      icon={RxCheck}
                       onCheckedChange={() => toggleSelection(customer.id)}
                       className="w-4 h-4 rounded-[4px] shadow-checkbox border-none"
                     />
@@ -208,7 +219,7 @@ export function CustomerTable() {
                           variant="ghost"
                           className="p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                          <EllipsisVertical size={16} />
+                          <BsThreeDotsVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
@@ -220,21 +231,21 @@ export function CustomerTable() {
                           onClick={() => openModal(customer.id, true)}
                         >
                           <span className="text-sm font-medium leading-5">View</span>
-                          <Info size={16} />
+                          <IoInformationCircle size={16} />
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="flex items-center justify-between px-2.5 py-1 text-brand cursor-pointer focus:bg-slate-50 focus:text-brand rounded-[4px]"
                           onClick={() => openModal(customer.id, false)}
                         >
                           <span className="text-sm font-medium leading-5">Edit</span>
-                          <Pencil size={16} />
+                          <IoPencilSharp size={16} />
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="flex items-center justify-between px-2.5 py-1 text-status-due-text cursor-pointer focus:bg-slate-50 focus:text-red-500 rounded-[4px]"
                           onClick={() => setCustomerToDelete(customer.id)}
                         >
                           <span className="text-sm font-medium leading-5">Delete</span>
-                          <Trash2 size={16} />
+                          <HiMiniTrash size={16} />
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -242,6 +253,16 @@ export function CustomerTable() {
                 </TableRow>
               );
             })}
+            {Array.from({ length: Math.max(0, 5 - paginatedCustomers.length) }).map((_, i) => (
+              <TableRow
+                key={`empty-${i}`}
+                className="h-[73px] border-none hover:bg-transparent px-2.5"
+              >
+                <TableCell colSpan={10} className="text-center text-slate-400 font-medium">
+                  {paginatedCustomers.length === 0 && i === 2 ? "No Data Found" : ""}
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
         <div className="h-4" />
@@ -268,8 +289,10 @@ export function CustomerTable() {
       {/* Pagination */}
       <div className="sticky bottom-0 h-11 w-full max-w-[1018px] mx-auto rounded-bl-lg rounded-br-lg flex items-center justify-between gap-5 px-5 py-[13px] bg-gray-100/75 backdrop-blur-[8px] z-20 mt-[-22px] shadow-sm">
         <div className="text-xs leading-[18px] font-medium text-text-secondary">
-          {startIndex + 1}-{Math.min(startIndex + itemsPerPage, sortedCustomers.length)} of{" "}
-          {sortedCustomers.length}
+          {sortedCustomers.length === 0
+            ? "0"
+            : `${startIndex + 1}-${Math.min(startIndex + itemsPerPage, sortedCustomers.length)}`}{" "}
+          of {sortedCustomers.length}
         </div>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-1">
@@ -305,11 +328,13 @@ export function CustomerTable() {
               disabled={currentPage === 1}
             >
               <span className="sr-only">Go to previous page</span>
-              <ChevronLeft size={16} />
+              <MdKeyboardArrowLeft size={16} />
             </Button>
             <div className="text-xs leading-[18px] font-medium text-text-secondary">
-              <span className="text-text-header">{currentPage}</span>
-              <span className="text-text-secondary">/{Math.max(1, totalPages)}</span>
+              <span className="text-text-header">
+                {sortedCustomers.length === 0 ? 0 : currentPage}
+              </span>
+              <span className="text-text-secondary">/{Math.min(currentPage, totalPages)}</span>
             </div>
             <Button
               variant="outline"
@@ -318,7 +343,7 @@ export function CustomerTable() {
               disabled={currentPage === totalPages}
             >
               <span className="sr-only">Go to next page</span>
-              <ChevronRight size={16} />
+              <MdKeyboardArrowRight size={16} />
             </Button>
           </div>
         </div>

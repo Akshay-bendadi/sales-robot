@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+import { LuLoaderCircle } from "react-icons/lu";
 import {
   Form,
   FormControl,
@@ -181,7 +181,7 @@ export function CustomerForm({
               disabled={isLoading}
               className="bg-blue-600 hover:bg-blue-700 text-white rounded-[14px] h-12 px-6 font-semibold shadow-sm"
             >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading && <LuLoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
               {defaultValues ? "Save Changes" : "Add Customer"}
             </Button>
           )}

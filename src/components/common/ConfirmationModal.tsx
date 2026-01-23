@@ -6,8 +6,11 @@ import {
   DialogFooter,
   Button,
 } from "@/components/ui";
-import { Loader2, AlertCircle, CheckCircle2, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LuLoaderCircle } from "react-icons/lu";
+import { CgDanger } from "react-icons/cg";
+import { FaCheckCircle } from "react-icons/fa";
+import { IoMdInformationCircle } from "react-icons/io";
 
 export type ConfirmationVariant = "danger" | "success" | "info";
 
@@ -37,18 +40,18 @@ export function ConfirmationModal({
       case "danger":
         return {
           button: "bg-red-600 hover:bg-red-700 text-white",
-          icon: <AlertCircle className="h-6 w-6 text-red-600" />,
+          icon: <CgDanger className="h-6 w-6 text-red-600" />,
         };
       case "success":
         return {
           button: "bg-green-600 hover:bg-green-700 text-white",
-          icon: <CheckCircle2 className="h-6 w-6 text-green-600" />,
+          icon: <FaCheckCircle className="h-6 w-6 text-green-600" />,
         };
       case "info":
       default:
         return {
           button: "bg-blue-600 hover:bg-blue-700 text-white",
-          icon: <Info className="h-6 w-6 text-blue-600" />,
+          icon: <IoMdInformationCircle className="h-6 w-6 text-blue-600" />,
         };
     }
   };
@@ -79,7 +82,7 @@ export function ConfirmationModal({
             onClick={onConfirm}
             disabled={isLoading}
           >
-            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isLoading && <LuLoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
             {okText}
           </Button>
         </DialogFooter>

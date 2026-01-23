@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
-import { Loader2 } from "lucide-react";
+import { LuLoaderPinwheel } from "react-icons/lu";
 import { Toaster } from "sonner";
 import { queryClient } from "@/lib/queryClient";
 
@@ -23,7 +23,7 @@ function App() {
                   <Suspense
                     fallback={
                       <div className="flex h-screen items-center justify-center">
-                        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                        <LuLoaderPinwheel className="h-8 w-8 animate-spin text-blue-600" />
                       </div>
                     }
                   >
